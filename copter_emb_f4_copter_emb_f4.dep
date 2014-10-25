@@ -1,0 +1,127 @@
+Dependencies for Project 'copter_emb_f4', Target 'copter_emb_f4': (DO NOT MODIFY !)
+F (.\source\CMSIS\core_cm4.h)(0x4EAA4C36)()
+F (.\source\CMSIS\core_cm4_simd.h)(0x4EAA4C36)()
+F (.\source\CMSIS\core_cmFunc.h)(0x4EAA4C36)()
+F (.\source\CMSIS\core_cmInstr.h)(0x4EAA4C36)()
+F (.\source\CMSIS\stm32f4xx.h)(0x4EAA4C36)()
+F (.\source\CMSIS\system_stm32f4xx.c)(0x4EAA4C36)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\system_stm32f4xx.o --omf_browse .\system_stm32f4xx.crf --depend .\system_stm32f4xx.d)
+I (source\CMSIS\stm32f4xx.h)(0x4EAA4C36)
+I (source\CMSIS\core_cm4.h)(0x4EAA4C36)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (.\source\CMSIS\core_cmInstr.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmFunc.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4_simd.h)(0x4EAA4C36)
+I (source\CMSIS\system_stm32f4xx.h)(0x4EAA4C36)
+F (.\source\CMSIS\system_stm32f4xx.h)(0x4EAA4C36)()
+F (.\source\startup\startup_stm32f4xx.s)(0x4EAA4C36)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork -I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"--list .\startup_stm32f4xx.lst --xref -o .\startup_stm32f4xx.o --depend .\startup_stm32f4xx.d)
+F (.\source\include\Buffer.h)(0x541FDFAC)()
+F (.\source\include\ClockControl.h)(0x541D5858)()
+F (.\source\include\I2C.h)(0x541F16FA)()
+F (.\source\include\Messenger.h)(0x54452913)()
+F (.\source\include\MPU6050.h)(0x54476750)()
+F (.\source\include\Serial.h)(0x541DEDF7)()
+F (.\source\include\Timer.h)(0x541D7A31)()
+F (.\source\include\USART.h)(0x541DA3FC)()
+F (.\source\include\Wire.h)(0x541F3BF3)()
+F (.\source\source\Buffer.c)(0x541FDF7D)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\buffer.o --omf_browse .\buffer.crf --depend .\buffer.d)
+I (.\source\include\Buffer.h)(0x541FDFAC)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+F (.\source\source\ClockControl.c)(0x541DE7C5)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\clockcontrol.o --omf_browse .\clockcontrol.crf --depend .\clockcontrol.d)
+I (.\source\CMSIS\stm32f4xx.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4.h)(0x4EAA4C36)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (.\source\CMSIS\core_cmInstr.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmFunc.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4_simd.h)(0x4EAA4C36)
+I (.\source\CMSIS\system_stm32f4xx.h)(0x4EAA4C36)
+I (.\source\include\ClockControl.h)(0x541D5858)
+F (.\source\source\I2C.c)(0x54476CD2)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\i2c.o --omf_browse .\i2c.crf --depend .\i2c.d)
+I (.\source\include\I2C.h)(0x541F16FA)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (.\source\CMSIS\stm32f4xx.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmInstr.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmFunc.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4_simd.h)(0x4EAA4C36)
+I (.\source\CMSIS\system_stm32f4xx.h)(0x4EAA4C36)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x53467284)
+I (.\source\include\Messenger.h)(0x54452913)
+I (.\source\include\Serial.h)(0x541DEDF7)
+I (.\source\include\Buffer.h)(0x541FDFAC)
+F (.\source\source\main.c)(0x54476CE0)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\main.o --omf_browse .\main.crf --depend .\main.d)
+I (.\source\CMSIS\stm32f4xx.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4.h)(0x4EAA4C36)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (.\source\CMSIS\core_cmInstr.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmFunc.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4_simd.h)(0x4EAA4C36)
+I (.\source\CMSIS\system_stm32f4xx.h)(0x4EAA4C36)
+I (.\source\include\ClockControl.h)(0x541D5858)
+I (.\source\include\Timer.h)(0x541D7A31)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53467284)
+I (.\source\include\Serial.h)(0x541DEDF7)
+I (.\source\include\Buffer.h)(0x541FDFAC)
+I (.\source\include\Messenger.h)(0x54452913)
+I (.\source\include\Wire.h)(0x541F3BF3)
+I (.\source\include\I2C.h)(0x541F16FA)
+I (.\source\include\MPU6050.h)(0x54476750)
+F (.\source\source\Messenger.c)(0x54452AAA)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\messenger.o --omf_browse .\messenger.crf --depend .\messenger.d)
+I (.\source\include\Messenger.h)(0x54452913)
+I (.\source\include\Serial.h)(0x541DEDF7)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53467284)
+I (.\source\include\Buffer.h)(0x541FDFAC)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\string.h)(0x53467284)
+F (.\source\source\MPU6050.c)(0x54476D31)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\mpu6050.o --omf_browse .\mpu6050.crf --depend .\mpu6050.d)
+I (.\source\include\MPU6050.h)(0x54476750)
+I (.\source\include\Wire.h)(0x541F3BF3)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53467284)
+I (.\source\include\I2C.h)(0x541F16FA)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x53467284)
+I (.\source\include\Serial.h)(0x541DEDF7)
+I (.\source\include\Buffer.h)(0x541FDFAC)
+I (.\source\include\Messenger.h)(0x54452913)
+F (.\source\source\Serial.c)(0x541FE531)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\serial.o --omf_browse .\serial.crf --depend .\serial.d)
+I (.\source\include\Serial.h)(0x541DEDF7)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53467284)
+I (.\source\include\Buffer.h)(0x541FDFAC)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdio.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\string.h)(0x53467284)
+I (.\source\include\USART.h)(0x541DA3FC)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\assert.h)(0x53467284)
+F (.\source\source\Timer.c)(0x541D7E4A)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\timer.o --omf_browse .\timer.crf --depend .\timer.d)
+I (.\source\include\Timer.h)(0x541D7A31)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53467284)
+I (.\source\include\ClockControl.h)(0x541D5858)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stddef.h)(0x53467284)
+I (.\source\CMSIS\stm32f4xx.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmInstr.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmFunc.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4_simd.h)(0x4EAA4C36)
+I (.\source\CMSIS\system_stm32f4xx.h)(0x4EAA4C36)
+F (.\source\source\USART.c)(0x541F1717)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\usart.o --omf_browse .\usart.crf --depend .\usart.d)
+I (.\source\include\USART.h)(0x541DA3FC)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (.\source\CMSIS\stm32f4xx.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmInstr.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cmFunc.h)(0x4EAA4C36)
+I (.\source\CMSIS\core_cm4_simd.h)(0x4EAA4C36)
+I (.\source\CMSIS\system_stm32f4xx.h)(0x4EAA4C36)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\math.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stddef.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x53467284)
+I (.\source\include\ClockControl.h)(0x541D5858)
+F (.\source\source\Wire.c)(0x541F4B8F)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\source\CMSIS -I.\source\include-I "C:\Program Files\Keil_v5\ARM\RV31\INC"-I "C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.1\CMSIS\Include"-I "C:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\1.0.8\Device\Include"-DSTM32F40_41xxx -DSTM32F40_41xxx-o .\wire.o --omf_browse .\wire.crf --depend .\wire.d)
+I (.\source\include\Wire.h)(0x541F3BF3)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdint.h)(0x53467284)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x53467284)
+I (.\source\include\I2C.h)(0x541F16FA)
+I (C:\Program Files\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x53467284)
