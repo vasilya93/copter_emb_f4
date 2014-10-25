@@ -67,7 +67,7 @@ bool I2C_StartOperation(I2C_OpDescript_Type description, uint8_t* bytes)
 	
   if((description.BytesNum > I2C_DATA_SIZE) || (I2C_Operation.State & I2C_ST_BUSY))
   {
-    //Messenger_SendByte(I2C_MSG_STRTFL); 
+    Messenger_SendByte(I2C_MSG_STRTFL); 
     return false;
   }
   I2C_Operation.State |= I2C_ST_BUSY;
@@ -105,6 +105,7 @@ void I2C1_EV_IRQHandler(void)
 {
   if(I2C1->SR1 & I2C_SR1_SB) {
     I2C_SendAddress();
+		return;
   }
 
   if(I2C1->SR1 & I2C_SR1_ADDR) {
@@ -118,14 +119,17 @@ void I2C1_EV_IRQHandler(void)
     } else {
       I2C_OperateReceiver();
     }
+		return;
   }
 
   if(I2C1->SR1 & I2C_SR1_TXE) {
     I2C_TransmitRegisterEmpty();
+		return;
   }
 
   if(I2C1->SR1 & I2C_SR1_RXNE) {
     I2C_ReceiveRegisterNotEmpty();
+		return;
   }
 }
 
@@ -136,7 +140,7 @@ void I2C1_ER_IRQHandler(void)
     I2C1->SR1 &= ~I2C_SR1_AF;
     I2C1->CR1 |= I2C_CR1_STOP;
     I2C_Operation.State &= ~I2C_ST_BUSY;
-    //Messenger_SendByte(I2C_MSG_AF);    
+    Messenger_SendByte(I2C_MSG_AF);    
     
     I2C1->CR1 |= I2C_CR1_ACK;  
     while(I2C1->SR2 & I2C_SR2_BUSY);  
@@ -144,7 +148,7 @@ void I2C1_ER_IRQHandler(void)
 
     //I2C_SetStart(false);
   } else {
-    //Messenger_SendByte(I2C_MSG_ERR);
+    Messenger_SendByte(I2C_MSG_ERR);
   }
 }
 
@@ -161,7 +165,7 @@ void I2C_OperateTransmitter()
 {
   I2C1->DR = I2C_Operation.Bytes[0];
   I2C_Operation.CurrentByte++;
-  Messenger_SendByte(I2C_MSG_TRNSMTR);
+  //Messenger_SendByte(I2C_MSG_TRNSMTR);
 }
 
 void I2C_OperateReceiver()
@@ -169,7 +173,7 @@ void I2C_OperateReceiver()
   if(I2C_Operation.Description.BytesNum == 1) {
     I2C1->CR1 |= I2C_CR1_STOP;
   }
-  Messenger_SendByte(I2C_MSG_RCVR);
+  //Messenger_SendByte(I2C_MSG_RCVR);
 }
 
 void I2C_TransmitRegisterEmpty()

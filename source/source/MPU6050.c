@@ -282,6 +282,30 @@ uint8_t* MPU6050_GetNextRegOperation(uint16_t currentDataDescript, I2C_OpDescrip
 	case MPU6050_DD_ACCELZREQ:
 		I2C_SetOpDescription(opDescript, MPU6050_DD_ACCELZDATA, MPU6050_ADDRESS, true, 2);
 		return NULL;
+	case MPU6050_DD_ACCELZDATA:
+		I2C_SetOpDescription(opDescript, MPU6050_DD_GYROXREQ, MPU6050_ADDRESS, false, 1);
+		data = (uint8_t*) malloc(1);
+		data[0] = MPU6050_RA_GYROXH;
+		return data;
+	case MPU6050_DD_GYROXREQ:
+		I2C_SetOpDescription(opDescript, MPU6050_DD_GYROXDATA, MPU6050_ADDRESS, true, 2);
+		return NULL;
+	case MPU6050_DD_GYROXDATA:
+		I2C_SetOpDescription(opDescript, MPU6050_DD_GYROYREQ, MPU6050_ADDRESS, false, 1);
+		data = (uint8_t*) malloc(1);
+		data[0] = MPU6050_RA_GYROYH;
+		return data;
+	case MPU6050_DD_GYROYREQ:
+		I2C_SetOpDescription(opDescript, MPU6050_DD_GYROYDATA, MPU6050_ADDRESS, true, 2);
+		return NULL;
+	case MPU6050_DD_GYROYDATA:
+		I2C_SetOpDescription(opDescript, MPU6050_DD_GYROZREQ, MPU6050_ADDRESS, false, 1);
+		data = (uint8_t*) malloc(1);
+		data[0] = MPU6050_RA_GYROZH;
+		return data;
+	case MPU6050_DD_GYROZREQ:
+		I2C_SetOpDescription(opDescript, MPU6050_DD_GYROZDATA, MPU6050_ADDRESS, true, 2);
+		return NULL;
   default:
     I2C_SetOpDescription(opDescript, WIRE_DD_NODATA, 0, false, 0);
     return NULL;
@@ -325,6 +349,24 @@ void MPU6050_ProcessOperationResult(I2C_Operation_Type* operation)
 		MPU6050_Data.accelz = operation->Bytes[0] << 8;
 		MPU6050_Data.accelz |= operation->Bytes[1];
 		Messenger_SendWord(MPU6050_Data.accelz, MSNR_DD_ACCELZ);
+		//Messenger_SendByte(MPU6050_MSG_ACCELZ);
+		break;
+	case MPU6050_DD_GYROXDATA:
+		MPU6050_Data.gyrox = operation->Bytes[0] << 8;
+		MPU6050_Data.gyrox |= operation->Bytes[1];
+		Messenger_SendWord(MPU6050_Data.gyrox, MSNR_DD_ANGSPEEDX); 
+		//Messenger_SendByte(MPU6050_MSG_ACCELX);
+		break;
+	case MPU6050_DD_GYROYDATA:
+		MPU6050_Data.gyroy = operation->Bytes[0] << 8;
+		MPU6050_Data.gyroy |= operation->Bytes[1];
+		Messenger_SendWord(MPU6050_Data.gyroy, MSNR_DD_ANGSPEEDY);
+		//Messenger_SendByte(MPU6050_MSG_ACCELY);
+		break;
+	case MPU6050_DD_GYROZDATA:
+		MPU6050_Data.gyroz = operation->Bytes[0] << 8;
+		MPU6050_Data.gyroz |= operation->Bytes[1];
+		Messenger_SendWord(MPU6050_Data.gyroz, MSNR_DD_ANGSPEEDZ);
 		//Messenger_SendByte(MPU6050_MSG_ACCELZ);
 		break;
   default:

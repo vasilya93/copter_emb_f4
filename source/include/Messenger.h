@@ -1,7 +1,7 @@
+#include "Serial.h"
+
 #ifndef MESSENGER_H
 #define MESSENGER_H
-
-#include "Serial.h"
 
 #define MSNR_MT_BYTE 0x01
 #define MSNR_MT_WORD 0x02
@@ -14,6 +14,9 @@
 #define MSNR_DD_ACCELZ 0x10
 #define MSNR_DD_WHOAMI 0x14
 #define MSNR_DD_PWRMGMT1 0x18
+#define MSNR_DD_ANGSPEEDX 0x1C
+#define MSNR_DD_ANGSPEEDY 0x20
+#define MSNR_DD_ANGSPEEDZ 0x24
 
 #define MSNR_PATTERNSIZE 5
 

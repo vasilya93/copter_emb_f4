@@ -44,7 +44,7 @@ void init_all(void)
 void start_operation(void)
 {
 	Timer_init(TIMER6);
-	Timer_start(TIMER6, begin_wire, 1000000, true);
+	Timer_start(TIMER6, begin_wire, 100000, true);
 }
 
 void toggle_led(void)
