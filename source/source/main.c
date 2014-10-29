@@ -32,7 +32,7 @@ void init_all(void)
 	Messenger_Initialize(&start_operation, MSNR_MODE_5BYTE);
 	
 	Wire_Initialize();
-	MPU6050_Initialize();
+	MPU6050_Initialize(MPU6050_STUP_CALIBRATE);
 	
 	led_state = 0;
 	

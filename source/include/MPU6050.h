@@ -134,7 +134,20 @@
 #define MPU6050_MSG_PWR1_GOOD 45
 #define MPU6050_MSG_INIT_COMP 46
 
-void MPU6050_Initialize(void);
+#define MPU6050_CALIBRATION_CYCLES 100
+
+typedef enum mpu6050_startup_t {
+	MPU6050_STUP_USEPRESET,
+	MPU6050_STUP_CALIBRATE
+}mpu6050_startup_t;
+
+typedef enum coordinate_t {
+	COORDINATE_X,
+	COORDINATE_Y,
+	COORDINATE_Z
+}coordinate_t;
+
+void MPU6050_Initialize(mpu6050_startup_t startup_type);
 
 uint8_t* MPU6050_GetNextInitOperation(uint16_t currentDataDescript, I2C_OpDescript_Type* opDescript);
 uint8_t* MPU6050_GetNextRegOperation(uint16_t currentDataDescript, I2C_OpDescript_Type* opDescript);
@@ -142,15 +155,30 @@ void MPU6050_ProcessOperationResult(I2C_Operation_Type* operation);
 
 typedef struct MPU6050_Data_Type
 {
+	mpu6050_startup_t startup_type;
+	uint8_t state;
 	uint8_t tmp;
 	
 	uint16_t gyrox;
 	uint16_t gyroy;
 	uint16_t gyroz;
 	
+	uint16_t gyrox_zero;
+	uint16_t gyroy_zero;
+	uint16_t gyroz_zero;
+	
+	uint32_t gyrox_accum;
+	uint32_t gyroy_accum;
+	uint32_t gyroz_accum;
+	
+	uint16_t x_counter;
+	uint16_t y_counter;
+	uint16_t z_counter;
+	
 	uint16_t accelx;
 	uint16_t accely;
 	uint16_t accelz;
+	
 }MPU6050_Data_Type;
 
 #endif
