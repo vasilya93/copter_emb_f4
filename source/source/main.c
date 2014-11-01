@@ -32,7 +32,7 @@ void init_all(void)
 	Messenger_Initialize(&start_operation, MSNR_MODE_5BYTE);
 	
 	Wire_Initialize();
-	MPU6050_Initialize(MPU6050_STUP_CALIBRATE);
+	MPU6050_Initialize(MPU6050_ST_CALIBRATE_GYRO | MPU6050_ST_CALIBRATE_ACCEL);
 	
 	led_state = 0;
 	
@@ -44,7 +44,7 @@ void init_all(void)
 void start_operation(void)
 {
 	Timer_init(TIMER6);
-	Timer_start(TIMER6, begin_wire, 100000, true);
+	Timer_start(TIMER6, begin_wire, 20000, true);
 }
 
 void toggle_led(void)

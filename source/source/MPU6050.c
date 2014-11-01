@@ -5,11 +5,10 @@
 #include "Serial.h"
 #include "Messenger.h"
 
-#define MPU6050_ST_GRXCBTD 0x01 //gyro calibrated
-#define MPU6050_ST_GRYCBTD 0x02
-#define MPU6050_ST_GRZCBTD 0x04
-
 MPU6050_Data_Type MPU6050_Data={
+	0, 0,
+	0, 0, 0,
+	0, 0, 0,
 	0, 0, 0,
 	0, 0, 0,
 	0, 0, 0,
@@ -20,13 +19,17 @@ MPU6050_Data_Type MPU6050_Data={
 
 Wire_Device_Type MPU6050;
 
-void add_gyro_val(uint16_t value, coordinate_t coord);
-void set_gyro_val(uint16_t value, coordinate_t coord);
-void gyro_calibrate(uint16_t value, coordinate_t coord);
+void add_gyro_val(int16_t value, coordinate_t coord);
+void set_gyro_val(int16_t value, coordinate_t coord);
+void gyro_calibrate(int16_t value, coordinate_t coord);
 
-void MPU6050_Initialize(mpu6050_startup_t startup_type)
+void add_accel_val(int16_t value, coordinate_t coord);
+void set_accel_val(int16_t value, coordinate_t coord);
+void accel_calibrate(int16_t value, coordinate_t coord);
+
+void MPU6050_Initialize(uint8_t startup_type)
 {
-	MPU6050_Data.startup_type = startup_type;
+	MPU6050_Data.state |= (startup_type & (MPU6050_ST_CALIBRATE_ACCEL | MPU6050_ST_CALIBRATE_GYRO));
 
   MPU6050.GetNextInitOperation = &MPU6050_GetNextInitOperation;
   MPU6050.GetNextRegOperation = &MPU6050_GetNextRegOperation;
@@ -351,49 +354,29 @@ void MPU6050_ProcessOperationResult(I2C_Operation_Type* operation)
 		Messenger_SendWord((uint16_t)MPU6050_Data.tmp, MSNR_DD_WHOAMI);
 		break;
 	case MPU6050_DD_ACCELXDATA:
-		MPU6050_Data.accelx = operation->Bytes[0] << 8;
-		MPU6050_Data.accelx |= operation->Bytes[1];
-		Messenger_SendWord(MPU6050_Data.accelx, MSNR_DD_ACCELX); 
-		//Messenger_SendByte(MPU6050_MSG_ACCELX);
+		add_accel_val((operation->Bytes[0] << 8) | operation->Bytes[1], COORDINATE_X);
 		break;
 	case MPU6050_DD_ACCELYDATA:
-		MPU6050_Data.accely = operation->Bytes[0] << 8;
-		MPU6050_Data.accely |= operation->Bytes[1];
-		Messenger_SendWord(MPU6050_Data.accely, MSNR_DD_ACCELY);
-		//Messenger_SendByte(MPU6050_MSG_ACCELY);
+		add_accel_val((operation->Bytes[0] << 8) | operation->Bytes[1], COORDINATE_Y);
 		break;
 	case MPU6050_DD_ACCELZDATA:
-		MPU6050_Data.accelz = operation->Bytes[0] << 8;
-		MPU6050_Data.accelz |= operation->Bytes[1];
-		Messenger_SendWord(MPU6050_Data.accelz, MSNR_DD_ACCELZ);
-		//Messenger_SendByte(MPU6050_MSG_ACCELZ);
+		add_accel_val((operation->Bytes[0] << 8) | operation->Bytes[1], COORDINATE_Z);
 		break;
 	case MPU6050_DD_GYROXDATA:
-		//MPU6050_Data.gyrox = operation->Bytes[0] << 8;
-		//MPU6050_Data.gyrox |= operation->Bytes[1];
 		add_gyro_val((operation->Bytes[0] << 8) | operation->Bytes[1], COORDINATE_X);
-		//Messenger_SendByte(MPU6050_MSG_ACCELX);
 		break;
 	case MPU6050_DD_GYROYDATA:
-		//MPU6050_Data.gyroy = operation->Bytes[0] << 8;
-		//MPU6050_Data.gyroy |= operation->Bytes[1];
 		add_gyro_val((operation->Bytes[0] << 8) | operation->Bytes[1], COORDINATE_Y);
-		//Messenger_SendWord(MPU6050_Data.gyroy, MSNR_DD_ANGSPEEDY);
-		//Messenger_SendByte(MPU6050_MSG_ACCELY);
 		break;
 	case MPU6050_DD_GYROZDATA:
-		//MPU6050_Data.gyroz = operation->Bytes[0] << 8;
-		//MPU6050_Data.gyroz |= operation->Bytes[1];
 		add_gyro_val((operation->Bytes[0] << 8) | operation->Bytes[1], COORDINATE_Z);
-		//Messenger_SendWord(MPU6050_Data.gyroz, MSNR_DD_ANGSPEEDZ);
-		//Messenger_SendByte(MPU6050_MSG_ACCELZ);
 		break;
   default:
     break;
   }
 }
 
-void add_gyro_val(uint16_t value, coordinate_t coord)
+void add_gyro_val(int16_t value, coordinate_t coord)
 {
 	uint8_t coord_is_calibrated;
 	switch (coord) {
@@ -409,7 +392,7 @@ void add_gyro_val(uint16_t value, coordinate_t coord)
 	}
 
 	if ((MPU6050_Data.state & coord_is_calibrated) ||
-	    (MPU6050_Data.startup_type == MPU6050_STUP_USEPRESET)) {
+	    (MPU6050_Data.state & MPU6050_ST_USE_GYRO_PRESET)) {
 		set_gyro_val(value, coord);
 		return;
 	}
@@ -417,9 +400,9 @@ void add_gyro_val(uint16_t value, coordinate_t coord)
 	gyro_calibrate(value, coord);
 }
 
-void set_gyro_val(uint16_t value, coordinate_t coord)
+void set_gyro_val(int16_t value, coordinate_t coord)
 {
-	uint16_t *gyro;
+	int16_t *gyro;
 	uint8_t data_descr;
 
 	switch (coord) {
@@ -441,10 +424,10 @@ void set_gyro_val(uint16_t value, coordinate_t coord)
 	Messenger_SendWord(*gyro, data_descr);
 }
 
-void gyro_calibrate(uint16_t value, coordinate_t coord)
+void gyro_calibrate(int16_t value, coordinate_t coord)
 {
-	uint16_t *gyro_zero;
-	uint32_t *accum;
+	int16_t *gyro_zero;
+	int32_t *accum;
 	uint16_t *counter;
 	uint8_t data_descr;
 	uint8_t coord_is_calibrated;
@@ -455,21 +438,21 @@ void gyro_calibrate(uint16_t value, coordinate_t coord)
 		accum = &MPU6050_Data.gyrox_accum;
 		counter = &MPU6050_Data.x_counter;
 		data_descr = MSNR_DD_GYROXOFF;
-		coord_is_calibrated = MPU6050_ST_GRXCBTD;;
+		coord_is_calibrated = MPU6050_ST_GRXCBTD;
 		break;
 	case COORDINATE_Y:
 		gyro_zero = &MPU6050_Data.gyroy_zero;
 		accum = &MPU6050_Data.gyroy_accum;
 		counter = &MPU6050_Data.y_counter;
 		data_descr = MSNR_DD_GYROYOFF;
-		coord_is_calibrated = MPU6050_ST_GRYCBTD;;
+		coord_is_calibrated = MPU6050_ST_GRYCBTD;
 		break;
 	case COORDINATE_Z:
 		gyro_zero = &MPU6050_Data.gyroz_zero;
 		accum = &MPU6050_Data.gyroz_accum;
 		counter = &MPU6050_Data.z_counter;
 		data_descr = MSNR_DD_GYROZOFF;
-		coord_is_calibrated = MPU6050_ST_GRZCBTD;;
+		coord_is_calibrated = MPU6050_ST_GRZCBTD;
 		break;
 	}
 
@@ -478,5 +461,93 @@ void gyro_calibrate(uint16_t value, coordinate_t coord)
 		MPU6050_Data.state |= coord_is_calibrated;
 		*gyro_zero = *accum / *counter;
 		Messenger_SendWord(*gyro_zero, data_descr);
+	}
+}
+
+void add_accel_val(int16_t value, coordinate_t coord)
+{
+	uint8_t coord_is_calibrated;
+	switch (coord) {
+	case COORDINATE_X:
+		coord_is_calibrated = MPU6050_ST_ACCXCBTD;
+		break;
+	case COORDINATE_Y:
+		coord_is_calibrated = MPU6050_ST_ACCYCBTD;
+		break;
+	case COORDINATE_Z:
+		coord_is_calibrated = MPU6050_ST_ACCZCBTD;
+		break;
+	}
+
+	if ((MPU6050_Data.state & coord_is_calibrated) ||
+	    (MPU6050_Data.state & MPU6050_ST_USE_ACCEL_PRESET)) {
+		set_accel_val(value, coord);
+		return;
+	}
+
+	accel_calibrate(value, coord);
+}
+
+void set_accel_val(int16_t value, coordinate_t coord)
+{
+	int16_t *accel;
+	uint8_t data_descr;
+
+	switch (coord) {
+	case COORDINATE_X:
+		accel = &MPU6050_Data.accelx;
+		data_descr = MSNR_DD_ACCELX;
+		break;
+	case COORDINATE_Y:
+		accel = &MPU6050_Data.accely;
+		data_descr = MSNR_DD_ACCELY;
+		break;
+	case COORDINATE_Z:
+		accel = &MPU6050_Data.accelz;
+		data_descr = MSNR_DD_ACCELZ;
+		break;
+	}
+
+	*accel = value;
+	Messenger_SendWord(*accel, data_descr);
+}
+
+void accel_calibrate(int16_t value, coordinate_t coord)
+{
+	int16_t *accel_zero;
+	int32_t *accum;
+	uint16_t *counter;
+	uint8_t data_descr;
+	uint8_t coord_is_calibrated;
+
+	switch (coord) {
+	case COORDINATE_X:
+		accel_zero = &MPU6050_Data.accelx_zero;
+		accum = &MPU6050_Data.accelx_accum;
+		counter = &MPU6050_Data.accelx_counter;
+		data_descr = MSNR_DD_ACCELXOFF;
+		coord_is_calibrated = MPU6050_ST_ACCXCBTD;
+		break;
+	case COORDINATE_Y:
+		accel_zero = &MPU6050_Data.accely_zero;
+		accum = &MPU6050_Data.accely_accum;
+		counter = &MPU6050_Data.accely_counter;
+		data_descr = MSNR_DD_ACCELYOFF;
+		coord_is_calibrated = MPU6050_ST_ACCYCBTD;
+		break;
+	case COORDINATE_Z:
+		accel_zero = &MPU6050_Data.accelz_zero;
+		accum = &MPU6050_Data.accelz_accum;
+		counter = &MPU6050_Data.accelz_counter;
+		data_descr = MSNR_DD_ACCELZOFF;
+		coord_is_calibrated = MPU6050_ST_ACCZCBTD;
+		break;
+	}
+
+	*accum += value;
+	if (++(*counter) >= MPU6050_CALIBRATION_CYCLES) {
+		MPU6050_Data.state |= coord_is_calibrated;
+		*accel_zero = *accum / *counter;
+		Messenger_SendWord(*accel_zero, data_descr);
 	}
 }

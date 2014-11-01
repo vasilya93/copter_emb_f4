@@ -134,12 +134,22 @@
 #define MPU6050_MSG_PWR1_GOOD 45
 #define MPU6050_MSG_INIT_COMP 46
 
-#define MPU6050_CALIBRATION_CYCLES 100
+#define MPU6050_ST_USE_GYRO_PRESET 0x00
+#define MPU6050_ST_CALIBRATE_GYRO 0x01
+#define MPU6050_ST_USE_ACCEL_PRESET 0x00
+#define MPU6050_ST_CALIBRATE_ACCEL 0x02
 
-typedef enum mpu6050_startup_t {
-	MPU6050_STUP_USEPRESET,
-	MPU6050_STUP_CALIBRATE
-}mpu6050_startup_t;
+#define MPU6050_ST_GRXCBTD 0x04 //gyro calibrated
+#define MPU6050_ST_GRYCBTD 0x08
+#define MPU6050_ST_GRZCBTD 0x10
+
+#define MPU6050_ST_ACCXCBTD 0x20 //accel calibrated
+#define MPU6050_ST_ACCYCBTD 0x40
+#define MPU6050_ST_ACCZCBTD 0x80
+
+#define MPU6050_CALIBRATION_CYCLES 500
+
+#define MPU6050_LSB_PER_G 500
 
 typedef enum coordinate_t {
 	COORDINATE_X,
@@ -147,7 +157,7 @@ typedef enum coordinate_t {
 	COORDINATE_Z
 }coordinate_t;
 
-void MPU6050_Initialize(mpu6050_startup_t startup_type);
+void MPU6050_Initialize(uint8_t startup_type);
 
 uint8_t* MPU6050_GetNextInitOperation(uint16_t currentDataDescript, I2C_OpDescript_Type* opDescript);
 uint8_t* MPU6050_GetNextRegOperation(uint16_t currentDataDescript, I2C_OpDescript_Type* opDescript);
@@ -155,30 +165,40 @@ void MPU6050_ProcessOperationResult(I2C_Operation_Type* operation);
 
 typedef struct MPU6050_Data_Type
 {
-	mpu6050_startup_t startup_type;
 	uint8_t state;
 	uint8_t tmp;
-	
-	uint16_t gyrox;
-	uint16_t gyroy;
-	uint16_t gyroz;
-	
-	uint16_t gyrox_zero;
-	uint16_t gyroy_zero;
-	uint16_t gyroz_zero;
-	
-	uint32_t gyrox_accum;
-	uint32_t gyroy_accum;
-	uint32_t gyroz_accum;
-	
+
+	int16_t gyrox;
+	int16_t gyroy;
+	int16_t gyroz;
+
+	int16_t gyrox_zero;
+	int16_t gyroy_zero;
+	int16_t gyroz_zero;
+
+	int32_t gyrox_accum;
+	int32_t gyroy_accum;
+	int32_t gyroz_accum;
+
 	uint16_t x_counter;
 	uint16_t y_counter;
 	uint16_t z_counter;
+
+	int16_t accelx;
+	int16_t accely;
+	int16_t accelz;
+
+	int16_t accelx_zero;
+	int16_t accely_zero;
+	int16_t accelz_zero;
 	
-	uint16_t accelx;
-	uint16_t accely;
-	uint16_t accelz;
+	int32_t accelx_accum;
+	int32_t accely_accum;
+	int32_t accelz_accum;
 	
+	uint16_t accelx_counter;
+	uint16_t accely_counter;
+	uint16_t accelz_counter;
 }MPU6050_Data_Type;
 
 #endif
