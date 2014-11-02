@@ -163,9 +163,13 @@ uint8_t* MPU6050_GetNextInitOperation(uint16_t currentDataDescript, I2C_OpDescri
 uint8_t* MPU6050_GetNextRegOperation(uint16_t currentDataDescript, I2C_OpDescript_Type* opDescript);
 void MPU6050_ProcessOperationResult(I2C_Operation_Type* operation);
 
+int MPU6050_attach_accel_handler(void (*new_handler)(int16_t, int16_t, int16_t));
+int MPU6050_attach_gyro_handler(void (*new_handler)(int16_t, int16_t, int16_t));
+
 typedef struct MPU6050_Data_Type
 {
 	uint8_t state;
+	uint8_t renew_state;
 	uint8_t tmp;
 
 	int16_t gyrox;
@@ -195,10 +199,16 @@ typedef struct MPU6050_Data_Type
 	int32_t accelx_accum;
 	int32_t accely_accum;
 	int32_t accelz_accum;
-	
+
 	uint16_t accelx_counter;
 	uint16_t accely_counter;
 	uint16_t accelz_counter;
+
+	void (**accel_handlers)(int16_t accelx, int16_t accely, int16_t accelz);
+	uint8_t accel_handlers_num;
+
+	void (**gyro_handlers)(int16_t accelx, int16_t accely, int16_t accelz);
+	uint8_t gyro_handlers_num;
 }MPU6050_Data_Type;
 
 #endif

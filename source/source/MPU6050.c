@@ -5,8 +5,17 @@
 #include "Serial.h"
 #include "Messenger.h"
 
+#define MPU6050_ACCELX_RENEWED	0x01
+#define MPU6050_ACCELY_RENEWED	0x02
+#define MPU6050_ACCELZ_RENEWED	0x04
+#define MPU6050_ACCEL_RENEWED		0x07
+
+#define MPU6050_GYROX_RENEWED		0x08
+#define MPU6050_GYROY_RENEWED		0x10
+#define MPU6050_GYROZ_RENEWED		0x20
+#define MPU6050_GYRO_RENEWED		0x38
+
 MPU6050_Data_Type MPU6050_Data={
-	0, 0,
 	0, 0, 0,
 	0, 0, 0,
 	0, 0, 0,
@@ -14,7 +23,10 @@ MPU6050_Data_Type MPU6050_Data={
 	0, 0, 0,
 	0, 0, 0,
 	0, 0, 0,
-	0, 0, 0
+	0, 0, 0,
+	0, 0, 0,
+	NULL, 0,
+	NULL, 0
 };
 
 Wire_Device_Type MPU6050;
@@ -26,6 +38,8 @@ void gyro_calibrate(int16_t value, coordinate_t coord);
 void add_accel_val(int16_t value, coordinate_t coord);
 void set_accel_val(int16_t value, coordinate_t coord);
 void accel_calibrate(int16_t value, coordinate_t coord);
+void accel_check_renew_state(void);
+void gyro_check_renew_state(void);
 
 void MPU6050_Initialize(uint8_t startup_type)
 {
@@ -403,25 +417,35 @@ void add_gyro_val(int16_t value, coordinate_t coord)
 void set_gyro_val(int16_t value, coordinate_t coord)
 {
 	int16_t *gyro;
+	int16_t *gyro_zero;
 	uint8_t data_descr;
+	uint8_t coord_renewed = 0;
 
 	switch (coord) {
 	case COORDINATE_X:
 		gyro = &MPU6050_Data.gyrox;
+		gyro_zero = &MPU6050_Data.gyrox_zero;
 		data_descr = MSNR_DD_ANGSPEEDX;
+		coord_renewed = MPU6050_GYROX_RENEWED;
 		break;
 	case COORDINATE_Y:
 		gyro = &MPU6050_Data.gyroy;
+		gyro_zero = &MPU6050_Data.gyroy_zero;
 		data_descr = MSNR_DD_ANGSPEEDY;
+		coord_renewed = MPU6050_GYROY_RENEWED;
 		break;
 	case COORDINATE_Z:
 		gyro = &MPU6050_Data.gyroz;
+		gyro_zero = &MPU6050_Data.gyroz_zero;
 		data_descr = MSNR_DD_ANGSPEEDZ;
+		coord_renewed = MPU6050_GYROZ_RENEWED;
 		break;
 	}
 
-	*gyro = value;
+	*gyro = value - *gyro_zero;
 	Messenger_SendWord(*gyro, data_descr);
+	MPU6050_Data.renew_state |= coord_renewed;
+	gyro_check_renew_state();
 }
 
 void gyro_calibrate(int16_t value, coordinate_t coord)
@@ -491,25 +515,35 @@ void add_accel_val(int16_t value, coordinate_t coord)
 void set_accel_val(int16_t value, coordinate_t coord)
 {
 	int16_t *accel;
+	int16_t *accel_zero;
 	uint8_t data_descr;
+	uint8_t coord_renewed;
 
 	switch (coord) {
 	case COORDINATE_X:
 		accel = &MPU6050_Data.accelx;
+		accel_zero = &MPU6050_Data.accelx_zero;
 		data_descr = MSNR_DD_ACCELX;
+		coord_renewed = MPU6050_ACCELX_RENEWED;
 		break;
 	case COORDINATE_Y:
 		accel = &MPU6050_Data.accely;
+		accel_zero = &MPU6050_Data.accely_zero;
 		data_descr = MSNR_DD_ACCELY;
+		coord_renewed = MPU6050_ACCELY_RENEWED;
 		break;
 	case COORDINATE_Z:
 		accel = &MPU6050_Data.accelz;
+		accel_zero = &MPU6050_Data.accelz_zero;
 		data_descr = MSNR_DD_ACCELZ;
+		coord_renewed = MPU6050_ACCELZ_RENEWED;
 		break;
 	}
 
-	*accel = value;
+	*accel = value - *accel_zero;
 	Messenger_SendWord(*accel, data_descr);
+	MPU6050_Data.renew_state |= coord_renewed;
+	accel_check_renew_state();
 }
 
 void accel_calibrate(int16_t value, coordinate_t coord)
@@ -551,3 +585,86 @@ void accel_calibrate(int16_t value, coordinate_t coord)
 		Messenger_SendWord(*accel_zero, data_descr);
 	}
 }
+
+void accel_check_renew_state()
+{
+	unsigned int i;
+	if ((MPU6050_Data.renew_state & MPU6050_ACCELX_RENEWED) &&
+	    (MPU6050_Data.renew_state & MPU6050_ACCELY_RENEWED) &&
+	    (MPU6050_Data.renew_state & MPU6050_ACCELZ_RENEWED)) {
+		MPU6050_Data.renew_state &= ~MPU6050_ACCEL_RENEWED;
+		for (i = 0; i < MPU6050_Data.accel_handlers_num; i++) {
+			(*MPU6050_Data.accel_handlers[i])(MPU6050_Data.accelx,
+			                                  MPU6050_Data.accely,
+			                                  MPU6050_Data.accelz);
+		}
+	}
+}
+
+void gyro_check_renew_state()
+{
+	unsigned int i;
+	if ((MPU6050_Data.renew_state & MPU6050_GYROX_RENEWED) &&
+	    (MPU6050_Data.renew_state & MPU6050_GYROY_RENEWED) &&
+	    (MPU6050_Data.renew_state & MPU6050_GYROZ_RENEWED)) {
+		MPU6050_Data.renew_state &= ~MPU6050_GYRO_RENEWED;
+		for (i = 0; i < MPU6050_Data.gyro_handlers_num; i++) {
+			(*MPU6050_Data.gyro_handlers[i])(MPU6050_Data.gyrox,
+			                                 MPU6050_Data.gyroy,
+			                                 MPU6050_Data.gyroz);
+		}
+	}
+}
+
+int MPU6050_attach_accel_handler(void (*new_handler)(int16_t, int16_t, int16_t))
+{
+	void (**new_pointer)(int16_t, int16_t, int16_t);
+
+	if(new_handler == NULL) {
+		return -1;
+	}
+
+	//(void (**)(int16_t, int16_t, int16_t))
+	MPU6050_Data.accel_handlers_num++;
+	new_pointer = realloc(MPU6050_Data.accel_handlers,
+	                      MPU6050_Data.accel_handlers_num * sizeof(void(*)(int16_t, int16_t, int16_t)));
+
+	if(new_pointer == NULL) {
+		MPU6050_Data.accel_handlers_num--;
+		return -1;
+	}
+
+	MPU6050_Data.accel_handlers = new_pointer;
+	MPU6050_Data.accel_handlers[MPU6050_Data.accel_handlers_num - 1] = new_handler;
+
+	return 0;
+}
+
+int MPU6050_attach_gyro_handler(void (*new_handler)(int16_t, int16_t, int16_t))
+{
+	void (**new_pointer)(int16_t, int16_t, int16_t);
+	
+	if(new_handler == NULL) {
+		return -1;
+	}
+
+	MPU6050_Data.gyro_handlers_num++;
+	new_pointer = realloc(MPU6050_Data.gyro_handlers,
+	                      MPU6050_Data.gyro_handlers_num * sizeof(void(*)(int16_t, int16_t, int16_t)));
+
+	if(new_pointer == NULL) {
+		MPU6050_Data.gyro_handlers_num--;
+		return -1;
+	}
+	
+	MPU6050_Data.gyro_handlers = new_pointer;
+	MPU6050_Data.gyro_handlers[MPU6050_Data.gyro_handlers_num - 1] = new_handler;
+	
+	return 0;
+}
+
+//normalization and prefiltration can be performed in sensor
+//data fusion algorithms must be abstracted
+//dependency tree, each separate unit must be initialized from main in sequence
+//units don't have access to objects within other units but have access to interfaces
+// Data fusion. 

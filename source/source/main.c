@@ -5,6 +5,7 @@
 #include "Messenger.h"
 #include "Wire.h"
 #include "MPU6050.h"
+#include "sensors_fusion.h"
 
 int led_state;
 bool are_devs_init = false;
@@ -19,7 +20,7 @@ void begin_wire(void);
 int main(void)
 {
 	init_all();
-	
+
 	while(1);
 }
 
@@ -33,6 +34,7 @@ void init_all(void)
 	
 	Wire_Initialize();
 	MPU6050_Initialize(MPU6050_ST_CALIBRATE_GYRO | MPU6050_ST_CALIBRATE_ACCEL);
+	sensors_fusion_init();
 	
 	led_state = 0;
 	
@@ -74,7 +76,7 @@ void begin_wire(void)
 		Wire_BeginCycle();
 		return;
 	}
-	
+
 	are_devs_init = true;
 	Wire_InitDevices();
 }
